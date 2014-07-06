@@ -2,8 +2,7 @@
 import pygame
 import time, math
 
-# size of the window in pixels
-# this should be automatic in the future
+# size of the window in pixels, this should be automatic in the future
 width = 800
 height = 600
 
@@ -39,14 +38,6 @@ while gameRunning:
 			if event.key == pygame.K_ESCAPE:
 				gameRunning = False
 			 	pygame.QUIT
-			# if event.key == pygame.K_UP:
-			# 	playerY = playerY - 10
-			# if event.key == pygame.K_DOWN:
-			# 	playerY = playerY + 10
-			# if event.key == pygame.K_LEFT:
-			# 	playerX = playerX - 10
-			# if event.key == pygame.K_RIGHT:
-			# 	playerX = playerX + 10
 	keys = pygame.key.get_pressed()
 	if keys[pygame.K_UP]:
 		playerY = playerY - 1
