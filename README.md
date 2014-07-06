@@ -4,7 +4,7 @@ avoidr
 collision avoidance game written in pygame
 
 # nexts steps:
-(0) detect the size of the moniter, make all spatial variables relative to variable screen size
+(0) detect the size of the monitor, make all spatial variables relative to variable screen size
 (1) add border collision detection
 (2) add moving obstacles
 (3) the background should be a random color on every frame redraw (or how many frames to skip?)
