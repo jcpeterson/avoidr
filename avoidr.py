@@ -86,3 +86,4 @@ while gameRunning:
 	if keys[pygame.K_RIGHT]:
 		playerX = playerX + 1
 	time.sleep(0.005)
+#test
