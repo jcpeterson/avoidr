@@ -21,7 +21,7 @@ height = displayInfo.current_h
 # create a new window
 screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 # set the window caption
-pygame.display.set_caption('avoidr.v0.05')
+pygame.display.set_caption('avoidr.v0.04')
 
 pygame.mouse.set_visible(False)
 
@@ -78,7 +78,7 @@ playerX = width/2
 playerY = height/2
 playerSpeed = 1
 playerSize = 25
-playerSizeMax = 50
+playerSizeMax = 55
 counter = 1
 
 # the main game loop
@@ -96,9 +96,9 @@ while gameRunning:
 	# playerSize changes
 	if counter == 1 and playerSize >= 25:
 		playerSize = playerSize + 1
-		if playerSize >= 50:
+		if playerSize >= 55:
 			counter = 0
-	if counter == 0 and playerSize <= 50:
+	if counter == 0 and playerSize <= 55:
 		playerSize = playerSize - 1
 		if playerSize <= 25:
 			counter = 1
