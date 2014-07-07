@@ -21,7 +21,7 @@ height = displayInfo.current_h
 # create a new window
 screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 # set the window caption
-pygame.display.set_caption('avoidr.v0.04')
+pygame.display.set_caption('avoidr.v0.05')
 
 pygame.mouse.set_visible(False)
 
@@ -45,8 +45,12 @@ bgR = randint(0,255)
 bgG = randint(0,255)
 bgB = randint(0,255)
 
+menuClock = pygame.time.Clock()
+
 # game loop for start screen
 while gameStart:
+	# lock the loop at 5 fps
+	menuClock.tick(5)
 	# handle input
 	for event in pygame.event.get():
 		#  start the game if spacebar is pressed
@@ -65,7 +69,6 @@ while gameStart:
 	screen.blit(logoText, (100, 60))
 	screen.blit(instrText, (100, 170))
 	pygame.display.flip()
-	time.sleep(0.1)
 
 # plays music infinitly
 pygame.mixer.music.play(-1)
@@ -76,21 +79,41 @@ framesToSkip = 1
 # player values
 playerX = width/2
 playerY = height/2
-playerSpeed = 1
+playerSpeed = 10
 playerSize = 25
 playerSizeMax = 55
 counter = 1
 
+counter = 1
+counter2 = 1
+botX = 0
+
+clock = pygame.time.Clock()
+
 # the main game loop
 while gameRunning:
+	# lock the gameloop at 60 fps
+	clock.tick(60)
+
+	# botX changes
+	if counter2 == 1 and botX >= 0:
+		botX = botX + 1
+		if botX == width - 100:
+			counter2 = 0
+	if counter2 == 0 and botX <= width:
+		botX = botX - 1
+		if botX == 0:
+			counter2 = 1
+
 	# fill the screen with a random background color
-	if framesToSkip == 50:
+	if framesToSkip == 20:
 		framesToSkip = 1
 		bgR = randint(0,255)
 		bgG = randint(0,255)
 		bgB = randint(0,255)
 	screen.fill((bgR,bgG,bgB))
 	# draw the main character
+	pygame.draw.rect(screen, (255-bgR,255-bgG,255-bgB), (botX, 100, 100, 25), 0)
 	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
 	pygame.display.flip()
 	# playerSize changes
@@ -116,26 +139,29 @@ while gameRunning:
 	# player movement + collision detection
 	keys = pygame.key.get_pressed()
 	# left border collision detection
-	if playerX != 0 + playerSizeMax:
+	if (playerX != 0 + playerSizeMax) and (playerX > 0 + playerSizeMax + 5):
 		# player movement input
 		if keys[pygame.K_LEFT]:
 			playerX = playerX - playerSpeed
 	# right border collision detection
-	if playerX != width - playerSizeMax:
+	if (playerX != width - playerSizeMax) and (playerX < width - (playerSizeMax + 5)):
 		# player movement input
 		if keys[pygame.K_RIGHT]:
-			playerX = playerX + playerSpeed
+			playerX = playerX + playerSpeed 
 	# vertical border collision detection
-	if playerY != 0 + playerSizeMax:
+	if (playerY != 0 + playerSizeMax) and (playerY > 0 + playerSizeMax + 5):
 		# player movement input
 		if keys[pygame.K_UP]:
 			playerY = playerY - playerSpeed
 	# vertical border collision detection
-	if playerY != height - playerSizeMax:
+	if (playerY != height - playerSizeMax) and (playerY < height - (playerSizeMax + 5)):
 		# player movement input
 		if keys[pygame.K_DOWN]:
 			playerY = playerY + playerSpeed
+	# exit game if collision with box accures
+	if playerX in range(botX, botX+100) and playerY in range(100, 125):
+		gameRunning = False
+		pygame.QUIT
 	# increment frames to skip - standardize this later!
 	framesToSkip = framesToSkip + 1
-	# delay the loop a bit - bind this to 60 fps later
-	time.sleep(0.001)
+
