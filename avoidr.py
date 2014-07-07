@@ -1,14 +1,13 @@
 # import libraries
 import pygame
 import os, time, math
+from random import randint
 
 # initializing pygame/pygame modules
 pygame.init()
 
 # imports ogg sound file
 pygame.mixer.music.load(os.path.join('audio','death.beat.v1.wav'))
-# plays music infinitly
-pygame.mixer.music.play(-1)
 
 # initialize the display
 pygame.display.init()
@@ -22,9 +21,7 @@ height = displayInfo.current_h
 # create a new window
 screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 # set the window caption
-pygame.display.set_caption('avoidr.v0.03')
-# make a 3-tuple with the color white
-background_colour = (255,255,255)
+pygame.display.set_caption('avoidr.v0.04')
 
 # the menu screen
 # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
@@ -41,6 +38,11 @@ pygame.display.flip()
 gameStart = True
 gameRunning = True
 
+# create the initial random background color
+bgR = randint(0,255)
+bgG = randint(0,255)
+bgB = randint(0,255)
+
 while gameStart:
 	# handle input
 	for event in pygame.event.get():
@@ -52,17 +54,37 @@ while gameStart:
 			if event.key == pygame.K_ESCAPE:
 				gameStart = False
 				gameRunning = False
+	# create three random r,g,b values
+	bgR = randint(0,255)
+	bgG = randint(0,255)
+	bgB = randint(0,255)
+	screen.fill((bgR,bgG,bgB))
+	screen.blit(logoText, (100, 60))
+	screen.blit(instrText, (100, 170))
+	pygame.display.flip()
+	time.sleep(0.1)
+
+# plays music infinitly
+pygame.mixer.music.play(-1)
 
 # player position
 playerX = width/2
 playerY = height/2
 
+# counter for number of frames to skip for the color flashing
+framesToSkip = 1
+
 # the main game loop
 while gameRunning:
-	# fill the screen with the background color
-	screen.fill(background_colour)
+	# fill the screen with a random background color
+	if framesToSkip == 50:
+		framesToSkip = 1
+		bgR = randint(0,255)
+		bgG = randint(0,255)
+		bgB = randint(0,255)
+	screen.fill((bgR,bgG,bgB))
 	# draw the main character
-	pygame.draw.circle(screen, (0,0,0), (playerX, playerY), 25, 0)
+	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), 25, 0)
 	pygame.display.flip()
 	# handle input
 	for event in pygame.event.get():
@@ -75,14 +97,32 @@ while gameRunning:
 			if event.key == pygame.K_ESCAPE:
 				gameRunning = False
 			 	pygame.QUIT
-	# player movement input
+	# player movement + collision detection
 	keys = pygame.key.get_pressed()
-	if keys[pygame.K_UP]:
-		playerY = playerY - 1
-	if keys[pygame.K_DOWN]:
-		playerY = playerY + 1
-	if keys[pygame.K_LEFT]:
-		playerX = playerX - 1
-	if keys[pygame.K_RIGHT]:
-		playerX = playerX + 1
-	time.sleep(0.005)
+	# left border collision detection
+	if playerX != 0:
+		# player movement input
+		if keys[pygame.K_LEFT]:
+			playerX = playerX - 1
+
+	# right border collision detection
+	if playerX != width:
+		# player movement input
+		if keys[pygame.K_RIGHT]:
+			playerX = playerX + 1
+
+	# vertical border collision detection
+	if playerY != 0:
+		# player movement input
+		if keys[pygame.K_UP]:
+			playerY = playerY - 1
+
+	# vertical border collision detection
+	if playerY != height:
+		# player movement input
+		if keys[pygame.K_DOWN]:
+			playerY = playerY + 1
+	# increment frames to skip - standardize this later!
+	framesToSkip = framesToSkip + 1
+	# delay the loop a bit - bind this to 60 fps later
+	time.sleep(0.001)
