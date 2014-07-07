@@ -21,7 +21,7 @@ height = displayInfo.current_h
 # create a new window
 screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 # set the window caption
-pygame.display.set_caption('avoidr.v0.04')
+pygame.display.set_caption('avoidr.v0.05')
 
 pygame.mouse.set_visible(False)
 
