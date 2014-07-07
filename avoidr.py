@@ -23,6 +23,8 @@ screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 # set the window caption
 pygame.display.set_caption('avoidr.v0.04')
 
+pygame.mouse.set_visible(False)
+
 # the menu screen
 # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
 logoFont = pygame.font.SysFont("monospace", 100)
@@ -43,6 +45,7 @@ bgR = randint(0,255)
 bgG = randint(0,255)
 bgB = randint(0,255)
 
+# game loop for start screen
 while gameStart:
 	# handle input
 	for event in pygame.event.get():
@@ -67,12 +70,16 @@ while gameStart:
 # plays music infinitly
 pygame.mixer.music.play(-1)
 
-# player position
-playerX = width/2
-playerY = height/2
-
 # counter for number of frames to skip for the color flashing
 framesToSkip = 1
+
+# player values
+playerX = width/2
+playerY = height/2
+playerSpeed = 1
+playerSize = 25
+playerSizeMax = 50
+counter = 1
 
 # the main game loop
 while gameRunning:
@@ -84,8 +91,17 @@ while gameRunning:
 		bgB = randint(0,255)
 	screen.fill((bgR,bgG,bgB))
 	# draw the main character
-	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), 25, 0)
+	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
 	pygame.display.flip()
+	# playerSize changes
+	if counter == 1 and playerSize >= 25:
+		playerSize = playerSize + 1
+		if playerSize >= 50:
+			counter = 0
+	if counter == 0 and playerSize <= 50:
+		playerSize = playerSize - 1
+		if playerSize <= 25:
+			counter = 1
 	# handle input
 	for event in pygame.event.get():
 		# exit if X button is pushed
@@ -100,28 +116,25 @@ while gameRunning:
 	# player movement + collision detection
 	keys = pygame.key.get_pressed()
 	# left border collision detection
-	if playerX != 0:
+	if playerX != 0 + playerSizeMax:
 		# player movement input
 		if keys[pygame.K_LEFT]:
-			playerX = playerX - 1
-
+			playerX = playerX - playerSpeed
 	# right border collision detection
-	if playerX != width:
+	if playerX != width - playerSizeMax:
 		# player movement input
 		if keys[pygame.K_RIGHT]:
-			playerX = playerX + 1
-
+			playerX = playerX + playerSpeed
 	# vertical border collision detection
-	if playerY != 0:
+	if playerY != 0 + playerSizeMax:
 		# player movement input
 		if keys[pygame.K_UP]:
-			playerY = playerY - 1
-
+			playerY = playerY - playerSpeed
 	# vertical border collision detection
-	if playerY != height:
+	if playerY != height - playerSizeMax:
 		# player movement input
 		if keys[pygame.K_DOWN]:
-			playerY = playerY + 1
+			playerY = playerY + playerSpeed
 	# increment frames to skip - standardize this later!
 	framesToSkip = framesToSkip + 1
 	# delay the loop a bit - bind this to 60 fps later
