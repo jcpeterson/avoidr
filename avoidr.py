@@ -1,6 +1,6 @@
 # import libraries
 import pygame
-import os, time, math
+import os, time, math, random
 from random import randint
 
 # initializing pygame/pygame modules
@@ -62,9 +62,7 @@ while gameStart:
 				gameStart = False
 				gameRunning = False
 	# create three random r,g,b values
-	bgR = randint(0,255)
-	bgG = randint(0,255)
-	bgB = randint(0,255)
+	bgR, bgG, bgB = randint(0,255), randint(0,255), randint(0,255)
 	screen.fill((bgR,bgG,bgB))
 	screen.blit(logoText, (100, 60))
 	screen.blit(instrText, (100, 170))
@@ -82,11 +80,33 @@ playerY = height/2
 playerSpeed = 10
 playerSize = 25
 playerSizeMax = 55
-counter = 1
 
-counter = 1
-counter2 = 1
-botX = 0
+playerSizeCounter = 1
+
+numObstacles = 100
+obstacleX = []
+obstacleY = []
+obstacleDirX = []
+obstacleDirY = []
+
+# create random starting positions for each obstacle
+### fix the indexing here
+for o in range(1,(numObstacles+2)):
+	obstacleX.append(randint(1,width))
+	obstacleY.append(randint(1,height))
+	rndDir = randint(0,1)
+	if rndDir == 0:
+		obstacleDirX.append('right')
+	else:
+		obstacleDirX.append('left')
+	rndDir = randint(0,1)
+	if rndDir == 0:
+		obstacleDirY.append('up')
+	else:
+		obstacleDirY.append('down')
+
+random.shuffle(obstacleX)
+random.shuffle(obstacleY)
 
 clock = pygame.time.Clock()
 
@@ -95,36 +115,57 @@ while gameRunning:
 	# lock the gameloop at 60 fps
 	clock.tick(60)
 
-	# botX changes
-	if counter2 == 1 and botX >= 0:
-		botX = botX + 1
-		if botX == width - 100:
-			counter2 = 0
-	if counter2 == 0 and botX <= width:
-		botX = botX - 1
-		if botX == 0:
-			counter2 = 1
+	# move the obstacles along
+	for o in range(1,(numObstacles+1)):
+
+		if obstacleDirX[o] == 'right':
+			if obstacleX[o] == width - 25:
+				obstacleDirX[o] = 'left'
+			else:
+				obstacleX[o] = obstacleX[o] + 1
+
+		if obstacleDirX[o] == 'left':
+			if obstacleX[o] <= 0:
+				obstacleDirX[o] = 'right'
+			else:
+				obstacleX[o] = obstacleX[o] - 1
+
+		if obstacleDirY[o] == 'up':
+			if obstacleY[o] == width - 25:
+				obstacleDirY[o] = 'left'
+			else:
+				obstacleX[o] = obstacleX[o] + 1
+
+		if obstacleDirX[o] == 'down':
+			if obstacleX[o] <= 0:
+				obstacleDirX[o] = 'right'
+			else:
+				obstacleX[o] = obstacleX[o] - 1
 
 	# fill the screen with a random background color
-	if framesToSkip == 20:
+	if framesToSkip == 50:
 		framesToSkip = 1
 		bgR = randint(0,255)
 		bgG = randint(0,255)
 		bgB = randint(0,255)
 	screen.fill((bgR,bgG,bgB))
+
+	# draw all obstacles
+	for o in range(1,numObstacles+1):
+		pygame.draw.rect(screen, (255-bgR,255-bgG,bgB), (obstacleX[o], obstacleY[o], 25, 25), 0)
+
 	# draw the main character
-	pygame.draw.rect(screen, (255-bgR,255-bgG,255-bgB), (botX, 100, 100, 25), 0)
 	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
 	pygame.display.flip()
 	# playerSize changes
-	if counter == 1 and playerSize >= 25:
+	if playerSizeCounter == 1 and playerSize >= 25:
 		playerSize = playerSize + 1
 		if playerSize >= 55:
-			counter = 0
-	if counter == 0 and playerSize <= 55:
+			playerSizeCounter = 0
+	if playerSizeCounter == 0 and playerSize <= 55:
 		playerSize = playerSize - 1
 		if playerSize <= 25:
-			counter = 1
+			playerSizeCounter = 1
 	# handle input
 	for event in pygame.event.get():
 		# exit if X button is pushed
@@ -159,9 +200,9 @@ while gameRunning:
 		if keys[pygame.K_DOWN]:
 			playerY = playerY + playerSpeed
 	# exit game if collision with box accures
-	if playerX in range(botX, botX+100) and playerY in range(100, 125):
-		gameRunning = False
-		pygame.QUIT
+	# if playerX in range(botX, botX+100) and playerY in range(100, 125):
+	# 	gameRunning = False
+	# 	pygame.QUIT
 	# increment frames to skip - standardize this later!
 	framesToSkip = framesToSkip + 1
 
