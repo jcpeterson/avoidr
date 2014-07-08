@@ -29,6 +29,7 @@ pygame.mouse.set_visible(False)
 # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
 logoFont = pygame.font.SysFont("monospace", 100)
 instrFont = pygame.font.SysFont("monospace", 27)
+timerFont = pygame.font.SysFont("Arial", 100, bold=True)
 
 # render text
 logoText = logoFont.render("AVOIDR", 1, (255,255,255))
@@ -118,8 +119,11 @@ random.shuffle(obstacleY)
 
 clock = pygame.time.Clock()
 
+startTimer = time.clock()
+
 # the main game loop
 while gameRunning:
+
 	# lock the gameloop at 60 fps
 	clock.tick(60)
 
@@ -152,8 +156,8 @@ while gameRunning:
 
 	# exit game if collision with box accures
 	for o in range(1,(numObstacles+1)):
-		if playerX in range(obstacleX[o], obstacleX[o] + obstacleSize + playerSize) and \
-		   playerY in range(obstacleY[o], obstacleY[o] + obstacleSize + playerSize):
+		if playerX in range(obstacleX[o] - playerSize, obstacleX[o] + obstacleSize + playerSize) and \
+		   playerY in range(obstacleY[o] - playerSize, obstacleY[o] + obstacleSize + playerSize):
 			gameRunning = False
 			pygame.QUIT
 
@@ -169,6 +173,12 @@ while gameRunning:
 
 	# draw the main character
 	pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
+
+	# draw the timer on the screen
+	timeString = '%.3g' % ((time.clock() - startTimer))
+	timerText = timerFont.render(timeString, 1, (255,255,255))
+	screen.blit(timerText, (50, 20))
+
 	pygame.display.flip()
 	# playerSize changes
 	if playerSizeCounter == 1 and playerSize >= playerSizeMin:
