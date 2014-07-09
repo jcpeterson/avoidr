@@ -3,6 +3,11 @@ import pygame
 import os, time, math, random
 from random import randint
 
+# import the obstacle class, for obstacles that the player must avoid
+from obstacle import Obstacle
+
+# obs = obstacle(1000,600)
+
 # initializing pygame/pygame modules
 pygame.init()
 
@@ -82,45 +87,17 @@ while restart == True:
 	playerX = width/2
 	playerY = height/2
 	playerSpeed = 10
-	playerSize = 25
-	playerSizeMax = 40
-	playerSizeMin = 20
+	playerSizeMax = 20
+	playerSizeMin = 10
+	playerSize = playerSizeMin
 
-	playerSizeCounter = 1
+	playerState = 'growing'
 
-	numObstacles = 20
-	obstacleSize = 50
-	obstacleSpeed = 3
-	obstacleX = []
-	obstacleY = []
-	obstacleDirX = []
-	obstacleDirY = []
+	numObstacles = 30
 
-	# create random starting positions for each obstacle
-	### fix the indexing here
-	for o in range(1,numObstacles+2):
-		obstacleX.append(randint(1,width))
-		obstacleY.append(randint(1,height))
-
-		rndDir = randint(0,1)
-		if rndDir == 0:
-			obstacleDirX.append('right')
-		else:
-			obstacleDirX.append('left')
-		rndDir = randint(0,1)
-		if rndDir == 0:
-			obstacleDirY.append('up')
-		else:
-			obstacleDirY.append('down')
-
-	wiggleRoom = playerSizeMax*3 
-	for o in range(1,numObstacles+1):
-		while (obstacleX[o] in range((width/2) - wiggleRoom,(width/2) + wiggleRoom)) or (obstacleY[o] in range((height/2) - wiggleRoom,(height/2) + wiggleRoom)):
-			obstacleX[o] = randint(1,width)
-			obstacleY[o] = randint(1,height)
-
-	random.shuffle(obstacleX)
-	random.shuffle(obstacleY)
+	obstacle = []
+	for o in range(0,numObstacles):
+		obstacle.append(Obstacle(width,height))
 
 	clock = pygame.time.Clock()
 
@@ -133,48 +110,36 @@ while restart == True:
 		clock.tick(60)
 
 		# move the obstacles along
-		for o in range(1,(numObstacles+1)):
+		for o in range(0,(numObstacles)):
 
-			if obstacleDirX[o] == 'right':
-				if obstacleX[o] >= width - obstacleSize:
-					obstacleDirX[o] = 'left'
-				else:
-					obstacleX[o] = obstacleX[o] + obstacleSpeed
+			if obstacle[o].posX >= width - obstacle[o].size or obstacle[o].posX <= 0:
+				obstacle[o].dirX *= -1
 
-			if obstacleDirX[o] == 'left':
-				if obstacleX[o] <= 0:
-					obstacleDirX[o] = 'right'
-				else:
-					obstacleX[o] = obstacleX[o] - obstacleSpeed
+			if obstacle[o].posY >= height - obstacle[o].size or obstacle[o].posY <= 0:
+				obstacle[o].dirY *= -1
 
-			if obstacleDirY[o] == 'up':
-				if obstacleY[o] <= 0:
-					obstacleDirY[o] = 'down'
-				else:
-					obstacleY[o] = obstacleY[o] - obstacleSpeed
+			# the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
+			obstacle[o].posX = obstacle[o].posX + (obstacle[o].dirX * obstacle[o].speed)
 
-			if obstacleDirY[o] == 'down':
-				if obstacleY[o] >= height - obstacleSize:
-					obstacleDirY[o] = 'up'
-				else:
-					obstacleY[o] = obstacleY[o] + obstacleSpeed
+			# the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
+			obstacle[o].posY = obstacle[o].posY + (obstacle[o].dirY * obstacle[o].speed)
 
-		# exit game if collision with box accures
-		for o in range(1,(numObstacles+1)):
-			if playerX in range(obstacleX[o] - playerSize, obstacleX[o] + obstacleSize + playerSize) and \
-			   playerY in range(obstacleY[o] - playerSize, obstacleY[o] + obstacleSize + playerSize):
+		# restart game if collision with box accures
+		for o in range(0,(numObstacles)):
+			if playerX in range(obstacle[o].posX - playerSize, obstacle[o].posX + obstacle[o].size + playerSize) and \
+			   playerY in range(obstacle[o].posY - playerSize, obstacle[o].posY + obstacle[o].size + playerSize):
 				gameRunning = False
 				#pygame.QUIT
 
 		# fill the screen with a random background color
-		if framesToSkip == 25:
+		if framesToSkip == 10:
 			framesToSkip = 1
 			bgR, bgG, bgB = randint(0,255), randint(0,255), randint(0,255)
 		screen.fill((bgR,bgG,bgB))
 
 		# draw all obstacles
-		for o in range(1,numObstacles+1):
-			pygame.draw.rect(screen, (255-bgR,255-bgG,bgB), (obstacleX[o], obstacleY[o], obstacleSize, obstacleSize), 0)
+		for o in range(0,numObstacles):
+			pygame.draw.rect(screen, (255-bgR,255-bgG,bgB), (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
 
 		# draw the main character
 		pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
@@ -186,14 +151,14 @@ while restart == True:
 
 		pygame.display.flip()
 		# playerSize changes
-		if playerSizeCounter == 1 and playerSize >= playerSizeMin:
+		if playerState == 'growing' and playerSize >= playerSizeMin:
 			playerSize = playerSize + 1
 			if playerSize >= playerSizeMax:
-				playerSizeCounter = 0
-		if playerSizeCounter == 0 and playerSize <= playerSizeMax:
+				playerState = 'shrinking'
+		if playerState == 'shrinking' and playerSize <= playerSizeMax:
 			playerSize = playerSize - 1
 			if playerSize <= playerSizeMin:
-				playerSizeCounter = 1
+				playerState = 'growing'
 		# handle input
 		for event in pygame.event.get():
 			# exit if X button is pushed
