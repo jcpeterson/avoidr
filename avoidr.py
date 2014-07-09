@@ -80,14 +80,16 @@ while restart == True:
 	# plays music infinitly
 	pygame.mixer.music.play(-1)
 
+	# the number of
+	bgFramesToSkip = 10
 	# counter for number of frames to skip for the color flashing
-	framesToSkip = 1
+	skippedBgFrames = 0
 
 	# create a player object
 	player = Player(width,height)
 
 	# the number of obstacles objects to create
-	numObstacles = 30
+	numObstacles = 10
 	# create the obstacle objects
 	obstacle = []
 	for o in range(0,numObstacles):
@@ -103,13 +105,15 @@ while restart == True:
 		# lock the gameloop at 60 fps
 		clock.tick(60)
 
-		# update the size of the player
-		# the player glows in size in a sinusoidal fashion
+		#-----------------------START: player / obstacle position updating-----------------------#
+
+		# update the size of the player (the player glows in size in a sinusoidal fashion)
 		player.updateSize()
 
 		# player movement + collision detection
 		keys = pygame.key.get_pressed()
 
+		# update the player position (move according to keystrokes)
 		player.updatePos(keys)
 
 		# move the obstacles along
@@ -117,21 +121,28 @@ while restart == True:
 			obstacle[o].updatePos()
 
 		# restart game if collision with box accures
+		# MOVE THIS TO THE OBSTACLE CLASS SOON (SEND IN THE PLAYER POSITION)
 		for o in range(0,(numObstacles)):
 			if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
 			   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):
+				# quit the current game
 				gameRunning = False
-				#pygame.QUIT
+
+		#------------------------END: player / obstacle position updating------------------------#
+
+		#---------------------START: draw/blit background, player, obstacles, & timer---------------------#
 
 		# fill the screen with a random background color
-		if framesToSkip == 10:
-			framesToSkip = 1
+		if skippedBgFrames == bgFramesToSkip:
+			skippedBgFrames = 1
 			bgR, bgG, bgB = randint(0,255), randint(0,255), randint(0,255)
 		screen.fill((bgR,bgG,bgB))
 
+		invertedBgColor = (255-bgR,255-bgG,255-bgB)
+
 		# draw all obstacles
-		for o in range(0,numObstacles):
-			pygame.draw.rect(screen, (255-bgR,255-bgG,bgB), (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
+		for o in range(0,Obstacle.count):
+			pygame.draw.rect(screen, invertedBgColor, (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
 
 		# draw the main character
 		pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (player.posX, player.posY), player.size, 0)
@@ -141,7 +152,12 @@ while restart == True:
 		timerText = timerFont.render(timeString, 1, (255,255,255))
 		screen.blit(timerText, (50, 20))
 
-		# handle input
+		pygame.display.flip()
+
+		#----------------------END: draw/blit background, player, obstacles, & timer----------------------#
+
+		#------------------------START: player movement input handling------------------------#
+
 		for event in pygame.event.get():
 			# exit if X button is pushed
 			if event.type == pygame.QUIT:
@@ -155,9 +171,9 @@ while restart == True:
 					restart = False
 				 	pygame.QUIT
 
-		pygame.display.flip()
+		#-------------------------END: player movement input handling-------------------------#
 
-		framesToSkip = framesToSkip + 1
+		skippedBgFrames += 1
 
 	pygame.mixer.music.stop()
 
