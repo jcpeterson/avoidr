@@ -3,10 +3,10 @@ import pygame
 import os, time, math, random
 from random import randint
 
+# import the player class
+from player import Player
 # import the obstacle class, for obstacles that the player must avoid
 from obstacle import Obstacle
-
-# obs = obstacle(1000,600)
 
 # initializing pygame/pygame modules
 pygame.init()
@@ -83,18 +83,12 @@ while restart == True:
 	# counter for number of frames to skip for the color flashing
 	framesToSkip = 1
 
-	# player values
-	playerX = width/2
-	playerY = height/2
-	playerSpeed = 10
-	playerSizeMax = 20
-	playerSizeMin = 10
-	playerSize = playerSizeMin
+	# create a player object
+	player = Player(width,height)
 
-	playerState = 'growing'
-
+	# the number of obstacles objects to create
 	numObstacles = 30
-
+	# create the obstacle objects
 	obstacle = []
 	for o in range(0,numObstacles):
 		obstacle.append(Obstacle(width,height))
@@ -109,25 +103,23 @@ while restart == True:
 		# lock the gameloop at 60 fps
 		clock.tick(60)
 
+		# update the size of the player
+		# the player glows in size in a sinusoidal fashion
+		player.updateSize()
+
+		# player movement + collision detection
+		keys = pygame.key.get_pressed()
+
+		player.updatePos(keys)
+
 		# move the obstacles along
 		for o in range(0,(numObstacles)):
-
-			if obstacle[o].posX >= width - obstacle[o].size or obstacle[o].posX <= 0:
-				obstacle[o].dirX *= -1
-
-			if obstacle[o].posY >= height - obstacle[o].size or obstacle[o].posY <= 0:
-				obstacle[o].dirY *= -1
-
-			# the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
-			obstacle[o].posX = obstacle[o].posX + (obstacle[o].dirX * obstacle[o].speed)
-
-			# the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
-			obstacle[o].posY = obstacle[o].posY + (obstacle[o].dirY * obstacle[o].speed)
+			obstacle[o].updatePos()
 
 		# restart game if collision with box accures
 		for o in range(0,(numObstacles)):
-			if playerX in range(obstacle[o].posX - playerSize, obstacle[o].posX + obstacle[o].size + playerSize) and \
-			   playerY in range(obstacle[o].posY - playerSize, obstacle[o].posY + obstacle[o].size + playerSize):
+			if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
+			   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):
 				gameRunning = False
 				#pygame.QUIT
 
@@ -142,23 +134,13 @@ while restart == True:
 			pygame.draw.rect(screen, (255-bgR,255-bgG,bgB), (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
 
 		# draw the main character
-		pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (playerX, playerY), playerSize, 0)
+		pygame.draw.circle(screen, (255-bgR,255-bgG,255-bgB), (player.posX, player.posY), player.size, 0)
 
 		# draw the timer on the screen
 		timeString = '%.3g' % ((time.clock() - startTimer))
 		timerText = timerFont.render(timeString, 1, (255,255,255))
 		screen.blit(timerText, (50, 20))
 
-		pygame.display.flip()
-		# playerSize changes
-		if playerState == 'growing' and playerSize >= playerSizeMin:
-			playerSize = playerSize + 1
-			if playerSize >= playerSizeMax:
-				playerState = 'shrinking'
-		if playerState == 'shrinking' and playerSize <= playerSizeMax:
-			playerSize = playerSize - 1
-			if playerSize <= playerSizeMin:
-				playerState = 'growing'
 		# handle input
 		for event in pygame.event.get():
 			# exit if X button is pushed
@@ -172,28 +154,9 @@ while restart == True:
 					gameRunning = False
 					restart = False
 				 	pygame.QUIT
-		# player movement + collision detection
-		keys = pygame.key.get_pressed()
-		# left border collision detection
-		if (playerX != 0 + playerSizeMax) and (playerX > 0 + playerSizeMax + 5):
-			# player movement input
-			if keys[pygame.K_LEFT]:
-				playerX = playerX - playerSpeed
-		# right border collision detection
-		if (playerX != width - playerSizeMax) and (playerX < width - (playerSizeMax + 5)):
-			# player movement input
-			if keys[pygame.K_RIGHT]:
-				playerX = playerX + playerSpeed 
-		# vertical border collision detection
-		if (playerY != 0 + playerSizeMax) and (playerY > 0 + playerSizeMax + 5):
-			# player movement input
-			if keys[pygame.K_UP]:
-				playerY = playerY - playerSpeed
-		# vertical border collision detection
-		if (playerY != height - playerSizeMax) and (playerY < height - (playerSizeMax + 5)):
-			# player movement input
-			if keys[pygame.K_DOWN]:
-				playerY = playerY + playerSpeed
+
+		pygame.display.flip()
+
 		framesToSkip = framesToSkip + 1
 
 	pygame.mixer.music.stop()

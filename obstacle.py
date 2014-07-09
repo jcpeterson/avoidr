@@ -47,15 +47,30 @@ class Obstacle:
       # one (more) obstacle instance has been made
       Obstacle.count += 1
 
+   # update the position of the player
+   def updatePos(self):
+
+      if self.posX >= self.posRangeX - self.size or self.posX <= 0:
+         self.dirX *= -1
+
+      if self.posY >= self.posRangeY - self.size or self.posY <= 0:
+         self.dirY *= -1
+
+      # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
+      self.posX = self.posX + (self.dirX * self.speed)
+
+      # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
+      self.posY = self.posY + (self.dirY * self.speed)
+
    # THESE SET-GET FUNCTIONS ARE NOT BEING USED YET!!!
-   def getPosX(self):
-     return self.posX
+   # def getPosX(self):
+   #   return self.posX
 
-   def setPosX(self, posX):
-     self.posX = posX
+   # def setPosX(self, posX):
+   #   self.posX = posX
 
-   def getPosY(self):
-     return self.posY
+   # def getPosY(self):
+   #   return self.posY
 
-   def setPosY(self):
-     self.posY = posY
+   # def setPosY(self):
+   #   self.posY = posY
