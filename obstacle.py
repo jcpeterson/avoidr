@@ -43,7 +43,10 @@ class Obstacle:
       # generate a random speed for the obstacle
       self.speedMin = 1
       self.speedMax = 4
-      self.speed = randint(self.speedMin,self.speedMax)
+      #self.speed = randint(self.speedMin,self.speedMax)
+
+      self.speedX = randint(self.speedMin,self.speedMax)
+      self.speedY = randint(self.speedMin,self.speedMax)
 
       # start out white; it doesn't really matter
       self.color = (255,255,255)
@@ -61,10 +64,10 @@ class Obstacle:
          self.dirY *= -1
 
       # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
-      self.posX = self.posX + (self.dirX * self.speed)
+      self.posX = self.posX + (self.dirX * self.speedX)
 
       # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
-      self.posY = self.posY + (self.dirY * self.speed)
+      self.posY = self.posY + (self.dirY * self.speedY)
 
    def updateColor(self,gameBgColor):
       # update the player color with a weird color (partly derived from the game background color)

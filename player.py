@@ -27,6 +27,9 @@ class Player:
       self.isJumping = False
       self.goingUp = True
 
+      self.killed = False
+      self.exploding = False
+
    def updateSize(self):
 
       # # player size changes
@@ -53,6 +56,9 @@ class Player:
                self.isJumping = False
                self.goingUp = True
                self.speed = 10
+
+      if self.killed == True:
+         self.exploding = True
 
    def updatePos(self, keys):
 

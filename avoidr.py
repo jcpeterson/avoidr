@@ -50,7 +50,7 @@ while restart == True:
 		# create a new window
 		screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
 		# set the window caption
-		pygame.display.set_caption('avoidr.v0.09')
+		pygame.display.set_caption('avoidr.v0.1')
 
 		pygame.mouse.set_visible(False)
 
@@ -79,7 +79,7 @@ while restart == True:
 		player = Player(width,height)
 
 		# the number of obstacles objects to create
-		numObstacles = 50
+		numObstacles = 5
 		# create the obstacle objects
 		obstacle = []
 		for o in range(0,numObstacles):
@@ -132,7 +132,10 @@ while restart == True:
 			# draw all obstacles
 			for o in range(0,numObstacles):
 				obstacle[o].updateColor(backgroundColor)
-				pygame.draw.rect(screen, obstacle[o].color, (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)				
+				pygame.draw.rect(screen, obstacle[o].color, (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
+
+			if player.isJumping == True:
+				pygame.draw.circle(screen, (50,50,50), (player.posX, player.posY+25), player.sizeMax-player.size, 0)				
 
 			# update the player color
 			player.updateColor(backgroundColor)
