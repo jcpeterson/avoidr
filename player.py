@@ -2,6 +2,8 @@ import pygame
 
 class Player:
 
+   # this takes in screen width/height to calculate the player's starting position (center of screen)
+   # it also takes in the background color to compute its own color (inverted background color)
    def __init__(self, screenWidth, screenHeight):
 
       self.posRangeX = screenWidth
@@ -18,6 +20,9 @@ class Player:
       self.size = self.sizeMin
 
       self.state = 'growing'
+
+      # make the player color white; it doesn't really matter how it starts
+      self.color = (255,255,255)
 
    def updateSize(self):
 
@@ -36,21 +41,25 @@ class Player:
 
       # left border collision detection
       if (self.posX != 0 + self.sizeMax) and (self.posX > 0 + self.sizeMax + 5):
-       # player movement input
-       if keys[pygame.K_LEFT]:
-          self.posX = self.posX - self.speed
+         # player movement input
+         if keys[pygame.K_LEFT]:
+            self.posX = self.posX - self.speed
       # right border collision detection
       if (self.posX != self.posRangeX - self.sizeMax) and (self.posX < self.posRangeX - (self.sizeMax + 5)):
-       # player movement input
-       if keys[pygame.K_RIGHT]:
-          self.posX = self.posX + self.speed 
+         # player movement input
+         if keys[pygame.K_RIGHT]:
+            self.posX = self.posX + self.speed 
       # vertical border collision detection
       if (self.posY != 0 + self.sizeMax) and (self.posY > 0 + self.sizeMax + 5):
-       # player movement input
-       if keys[pygame.K_UP]:
-          self.posY = self.posY - self.speed
+         # player movement input
+         if keys[pygame.K_UP]:
+            self.posY = self.posY - self.speed
       # vertical border collision detection
       if (self.posY != self.posRangeY - self.sizeMax) and (self.posY < self.posRangeY - (self.sizeMax + 5)):
-       # player movement input
-       if keys[pygame.K_DOWN]:
-          self.posY = self.posY + self.speed
+         # player movement input
+         if keys[pygame.K_DOWN]:
+            self.posY = self.posY + self.speed
+
+   def updateColor(self,gameBgColor):
+      # update the player color with the inverted current background color
+      self.color = (255-gameBgColor[0],255-gameBgColor[1],255-gameBgColor[2])

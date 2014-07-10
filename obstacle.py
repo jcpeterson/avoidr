@@ -1,4 +1,5 @@
 from random import randint
+import math
 
 class Obstacle:
 
@@ -44,6 +45,9 @@ class Obstacle:
       self.speedMax = 4
       self.speed = randint(self.speedMin,self.speedMax)
 
+      # start out white; it doesn't really matter
+      self.color = (255,255,255)
+
       # one (more) obstacle instance has been made
       Obstacle.count += 1
 
@@ -61,6 +65,10 @@ class Obstacle:
 
       # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
       self.posY = self.posY + (self.dirY * self.speed)
+
+   def updateColor(self,gameBgColor):
+      # update the player color with a weird color (partly derived from the game background color)
+      self.color = (math.fabs(100-gameBgColor[0]),255-gameBgColor[1],gameBgColor[2])
 
    # THESE SET-GET FUNCTIONS ARE NOT BEING USED YET!!!
    # def getPosX(self):
