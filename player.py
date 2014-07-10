@@ -14,8 +14,8 @@ class Player:
 
       self.speed = 10
 
-      self.sizeMax = 20
-      self.sizeMin = 10
+      self.sizeMax = 60
+      self.sizeMin = 20
       # might as well start out at the minimum size
       self.size = self.sizeMin
 
@@ -24,18 +24,35 @@ class Player:
       # make the player color white; it doesn't really matter how it starts
       self.color = (255,255,255)
 
+      self.isJumping = False
+      self.goingUp = True
+
    def updateSize(self):
 
-      # player size changes
-      if self.state == 'growing' and self.size >= self.sizeMin:
-         self.size = self.size + 1
-         if self.size >= self.sizeMax:
-            self.state = 'shrinking'
+      # # player size changes
+      # if self.state == 'growing' and self.size >= self.sizeMin:
+      #    self.size = self.size + 1
+      #    if self.size >= self.sizeMax:
+      #       self.state = 'shrinking'
 
-      if self.state == 'shrinking' and self.size <= self.sizeMax:
-         self.size = self.size - 1
-         if self.size <= self.sizeMin:
-            self.state = 'growing'
+      # if self.state == 'shrinking' and self.size <= self.sizeMax:
+      #    self.size = self.size - 1
+      #    if self.size <= self.sizeMin:
+      #       self.state = 'growing'
+
+      if self.isJumping == True:
+         self.speed = 3
+         # player size changes when jumpin
+         if self.goingUp == True:
+            self.size = self.size + 1
+            if self.size == self.sizeMax:
+               self.goingUp = False
+         if self.goingUp == False:
+            self.size = self.size - 1
+            if self.size == self.sizeMin:
+               self.isJumping = False
+               self.goingUp = True
+               self.speed = 10
 
    def updatePos(self, keys):
 
@@ -59,6 +76,9 @@ class Player:
          # player movement input
          if keys[pygame.K_DOWN]:
             self.posY = self.posY + self.speed
+         # MOVE THIS OVER TO THE SIZE FUNCTION SOON!!!
+         if keys[pygame.K_SPACE]:
+            self.isJumping = True
 
    def updateColor(self,gameBgColor):
       # update the player color with the inverted current background color

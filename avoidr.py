@@ -79,7 +79,7 @@ while restart == True:
 		player = Player(width,height)
 
 		# the number of obstacles objects to create
-		numObstacles = 10
+		numObstacles = 50
 		# create the obstacle objects
 		obstacle = []
 		for o in range(0,numObstacles):
@@ -112,11 +112,12 @@ while restart == True:
 
 			# restart game if collision with box accures
 			# MOVE THIS TO THE OBSTACLE CLASS SOON (SEND IN THE PLAYER POSITION)
-			for o in range(0,(numObstacles)):
-				if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
-				   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):
-					# quit the current game
-					gameRunning = False
+			if player.isJumping == False:
+				for o in range(0,(numObstacles)):
+					if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
+					   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):
+						# quit the current game
+						gameRunning = False
 	        #                                                                                           #
 			#------------------------END: player/obstacle size/position updating------------------------#
 
