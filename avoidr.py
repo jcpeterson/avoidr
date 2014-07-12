@@ -1,4 +1,4 @@
-# AVOIDR v0.01
+# AVOIDR v0.11
 
 # import libraries
 import pygame
@@ -79,7 +79,7 @@ while restart == True:
 		player = Player(width,height)
 
 		# the number of obstacles objects to create
-		numObstacles = 5
+		numObstacles = 30
 		# create the obstacle objects
 		obstacle = []
 		for o in range(0,numObstacles):
@@ -91,7 +91,6 @@ while restart == True:
 
 		# the main game loop
 		while gameRunning:
-
 			# lock the gameloop at 60 fps
 			clock.tick(60)
 

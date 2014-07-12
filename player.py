@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 
 class Player:
 
@@ -29,6 +29,10 @@ class Player:
 
       self.killed = False
       self.exploding = False
+
+      self.jumpSound = pygame.mixer.music
+
+      self.jumpSound.load(os.path.join('audio','jump.wav'))
 
    def updateSize(self):
 
@@ -85,6 +89,8 @@ class Player:
          # MOVE THIS OVER TO THE SIZE FUNCTION SOON!!!
          if keys[pygame.K_SPACE]:
             self.isJumping = True
+            if self.jumpSound.get_busy() == False:
+               self.jumpSound.play()
 
    def updateColor(self,gameBgColor):
       # update the player color with the inverted current background color
