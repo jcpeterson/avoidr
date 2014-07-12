@@ -1,7 +1,9 @@
 avoidr 0.1
 ======
 
-AVOIDR is a collision avoidance game written in python with pygame. 
+AVOIDR is a collision avoidance game written in python with pygame.
+
+Authors: Connor McEntire & Joshua Peterson
 
 The latest build for Windows has been uploaded (avoidr.v0.11.zip). It hasn't
 been tested on other machines yet. 
