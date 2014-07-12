@@ -3,6 +3,9 @@ avoidr 0.1
 
 AVOIDR is a collision avoidance game written in python with pygame. 
 
+The latest build for Windows has been uploaded (avoidr.v0.11.zip). It hasn't
+been tested on other machines yet. 
+
 #Game Instructions
 
 Move the player around to avoid colliding with the surrounding objects.
@@ -18,3 +21,10 @@ Space: jump
 (2) add settings page and config file 
 (3) create a level system
 ...
+
+#Dependencies Needed
+
+pygame
+
+If you want to build the game on Windows, you will need py2exe and pygame2exe.
+
