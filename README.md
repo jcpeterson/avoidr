@@ -1,4 +1,4 @@
-avoidr 0.1
+avoidr 0.11
 ======
 
 AVOIDR is a collision avoidance game written in python with pygame.
@@ -8,8 +8,7 @@ Authors: Connor McEntire & Joshua Peterson
 The latest build for Windows has been uploaded (avoidr.v0.11.zip). It hasn't
 been tested on other machines yet. 
 
-[Download for Windows Here](https://drive.google.com/file/d/0B8Fe09MWGazkTzI1dTZac2VBTTQ/edit?usp=sharing)
-
+[Download for Windows Here](https://bitbucket.org/jcpeterson/avoidr/downloads
 #Game Instructions
 
 Move the player around to avoid colliding with the surrounding objects.
