@@ -176,4 +176,3 @@ while restart == True:
 			skippedBgFrames += 1
 
 	pygame.mixer.music.stop()
-
