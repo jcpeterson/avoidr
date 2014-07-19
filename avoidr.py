@@ -1,4 +1,4 @@
-# AVOIDR v0.11
+# AVOIDR v0.12
 
 # import libraries
 import pygame
@@ -111,7 +111,8 @@ while restart == True:
 
 			# restart game if collision with box accures
 			# MOVE THIS TO THE OBSTACLE CLASS SOON (SEND IN THE PLAYER POSITION)
-			if player.isJumping == False:
+			# collision detection after jumping is currently hacky. should use a timer later on...
+			if player.isJumping == False or (player.size in range(player.sizeMin,player.sizeMin+5)):
 				for o in range(0,(numObstacles)):
 					if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
 					   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):

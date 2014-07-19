@@ -87,9 +87,10 @@ class Player:
             self.posY = self.posY + self.speed
          # MOVE THIS OVER TO THE SIZE FUNCTION SOON!!!
          if keys[pygame.K_SPACE]:
-            self.isJumping = True
-            # play the jump sound
-            self.jumpSound.play()
+            if self.isJumping == False:
+               # play the jump sound
+               self.jumpSound.play()
+               self.isJumping = True
 
    def updateColor(self,gameBgColor):
       # update the player color with the inverted current background color
