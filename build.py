@@ -56,20 +56,20 @@ class BuildExe:
         self.script = "avoidr.py"
  
         #Name of program
-        self.project_name = "avoidr v0.11"
+        self.project_name = "avoidr v0.12"
  
         #Project url
         self.project_url = "https://github.com/jcpeterson/avoidr"
  
         #Version of program
-        self.project_version = "0.11"
+        self.project_version = "0.12"
  
         #License of the program
         self.license = "GPL v3"
  
         #Auhor of program
-        self.author_name = "Connor McEntire & Joshua Peterson"
-        self.author_email = "thesegoodtarts@gmail.com"
+        self.author_name = "Joshua Peterson & Connor McEntire"
+        self.author_email = "peterson.c.joshua@gmail.com"
         self.copyright = "Copyright (c) 2014."
  
         #Description
