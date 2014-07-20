@@ -37,30 +37,30 @@ class Player:
 
       # # player size changes
       # if self.state == 'growing' and self.size >= self.sizeMin:
-      #    self.size = self.size + 1
+      #    self.size += 1
       #    if self.size >= self.sizeMax:
       #       self.state = 'shrinking'
 
       # if self.state == 'shrinking' and self.size <= self.sizeMax:
-      #    self.size = self.size - 1
+      #    self.size -= 1
       #    if self.size <= self.sizeMin:
       #       self.state = 'growing'
 
-      if self.isJumping == True:
+      if self.isJumping:
          self.speed = 3
          # player size changes when jumpin
-         if self.goingUp == True:
-            self.size = self.size + 1
+         if self.goingUp:
+            self.size += 1
             if self.size == self.sizeMax:
                self.goingUp = False
-         if self.goingUp == False:
-            self.size = self.size - 1
+         if not self.goingUp:
+            self.size -= 1
             if self.size == self.sizeMin:
                self.isJumping = False
                self.goingUp = True
                self.speed = 10
 
-      if self.killed == True:
+      if self.killed:
          self.exploding = True
 
    def updatePos(self, keys):
@@ -87,7 +87,7 @@ class Player:
             self.posY = self.posY + self.speed
          # MOVE THIS OVER TO THE SIZE FUNCTION SOON!!!
          if keys[pygame.K_SPACE]:
-            if self.isJumping == False:
+            if not self.isJumping:
                # play the jump sound
                self.jumpSound.play()
                self.isJumping = True

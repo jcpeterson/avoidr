@@ -1,4 +1,4 @@
-# AVOIDR v0.12
+# AVOIDR v0.13
 
 # import libraries
 import pygame
@@ -17,23 +17,25 @@ pygame.init()
 menu = Menu()
 #menu.show('main')
 
-# a simple function to generate random color RGB triplets
 def generateRandColor():
+	"""
+    This function generates random RGB triplets.
+    """
 	return (randint(0,255), randint(0,255), randint(0,255))
 
 exit = False
 restart = True
 
-while restart == True:
+while restart:
 
 	exit = menu.exitOrNot()
-	if exit == False:
+	if not exit:
 		menu.show('main')
 	else:
 		restart = False
 	exit = menu.exitOrNot()
 
-	if exit == False:
+	if not exit:
 
 		# imports ogg sound file
 		pygame.mixer.music.load(os.path.join('audio','epica.v1.wav'))
@@ -49,8 +51,6 @@ while restart == True:
 
 		# create a new window
 		screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
-		# set the window caption
-		pygame.display.set_caption('avoidr.v0.1')
 
 		pygame.mouse.set_visible(False)
 
@@ -82,7 +82,7 @@ while restart == True:
 		numObstacles = 30
 		# create the obstacle objects
 		obstacle = []
-		for o in range(0,numObstacles):
+		for obs in range(numObstacles):
 			obstacle.append(Obstacle(width,height))
 
 		clock = pygame.time.Clock()
@@ -106,16 +106,16 @@ while restart == True:
 			player.updatePos(keys)
 
 			# move the obstacles along
-			for o in range(0,(numObstacles)):
-				obstacle[o].updatePos()
+			for obs in obstacle:
+				obs.updatePos()
 
 			# restart game if collision with box accures
 			# MOVE THIS TO THE OBSTACLE CLASS SOON (SEND IN THE PLAYER POSITION)
 			# collision detection after jumping is currently hacky. should use a timer later on...
-			if player.isJumping == False or (player.size in range(player.sizeMin,player.sizeMin+5)):
-				for o in range(0,(numObstacles)):
-					if player.posX in range(obstacle[o].posX - player.size, obstacle[o].posX + obstacle[o].size + player.size) and \
-					   player.posY in range(obstacle[o].posY - player.size, obstacle[o].posY + obstacle[o].size + player.size):
+			if not player.isJumping or (player.size in range(player.sizeMin,player.sizeMin+5)):
+				for obs in obstacle:
+					if player.posX in range(obs.posX - player.size, obs.posX + obs.size + player.size) and \
+					   player.posY in range(obs.posY - player.size, obs.posY + obs.size + player.size):
 						# quit the current game
 						gameRunning = False
 	        #                                                                                           #
@@ -130,11 +130,11 @@ while restart == True:
 			screen.fill(backgroundColor)
 
 			# draw all obstacles
-			for o in range(0,numObstacles):
-				obstacle[o].updateColor(backgroundColor)
-				pygame.draw.rect(screen, obstacle[o].color, (obstacle[o].posX, obstacle[o].posY, obstacle[o].size, obstacle[o].size), 0)
+			for obs in obstacle:
+				obs.updateColor(backgroundColor)
+				pygame.draw.rect(screen, obs.color, (obs.posX, obs.posY, obs.size, obs.size), 0)
 
-			if player.isJumping == True:
+			if player.isJumping:
 				pygame.draw.circle(screen, (50,50,50), (player.posX, player.posY+25), player.sizeMax-player.size, 0)				
 
 			# update the player color
@@ -160,16 +160,10 @@ while restart == True:
 				# exit if X button is pushed
 				if event.type == pygame.QUIT:
 					gameRunning = False
-					#restart = False
-					#pygame.display.quit()
-					pygame.QUIT
 				# exit if ESC key is pushed
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
 						gameRunning = False
-						#restart = False
-						#pygame.display.quit()
-					 	pygame.QUIT
 			#																		   #
 			#-------------------------END: game input handling-------------------------#
 

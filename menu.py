@@ -1,6 +1,6 @@
 # import libraries
 import pygame
-import os, time, math, random
+import os, sys, time, math, random
 from random import randint
 
 class Menu():
@@ -41,7 +41,7 @@ class Menu():
 
 		self.displayMenu = True
 
-		while self.displayMenu == True:
+		while self.displayMenu:
 
 			# lock the loop at 5 fps
 			self.menuClock.tick(5)
@@ -66,20 +66,21 @@ class Menu():
 					self.displayMenu = False
 					pygame.mouse.set_visible(True)
 					#pygame.display.quit()
-					pygame.QUIT
 					self.exitGame = True
+					pygame.quit()
+					sys.exit()
 				# exit if ESC key is pushed
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
 						self.displayMenu = False
 						pygame.mouse.set_visible(True)
 						#pygame.display.quit()
-					 	pygame.QUIT
 					 	self.exitGame = True
+					 	pygame.quit()
+					 	sys.exit()
 					if event.key == pygame.K_SPACE:
 						self.displayMenu = False
 						#pygame.display.quit()
-					 	pygame.QUIT
 
 	def exitOrNot(self):
 		return self.exitGame
