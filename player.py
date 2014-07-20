@@ -14,8 +14,8 @@ class Player:
 
       self.speed = 10
 
-      self.sizeMax = 60
-      self.sizeMin = 20
+      self.sizeMax = 80
+      self.sizeMin = 42#40
       # might as well start out at the minimum size
       self.size = self.sizeMin
 
@@ -29,6 +29,8 @@ class Player:
 
       self.killed = False
       self.exploding = False
+
+      self.rect = pygame.Rect((self.posX,self.posY),(self.size,self.size))
 
       # load the jump sound
       self.jumpSound = pygame.mixer.Sound(os.path.join('audio','jump.wav'))
@@ -60,6 +62,10 @@ class Player:
                self.goingUp = True
                self.speed = 10
 
+      self.rect.width = self.size
+      self.rect.height = self.size
+
+      # sounds/animations for this have not been implemented yet
       if self.killed:
          self.exploding = True
 
@@ -91,6 +97,18 @@ class Player:
                # play the jump sound
                self.jumpSound.play()
                self.isJumping = True
+
+      self.rect.x = self.posX
+      self.rect.y = self.posY
+
+      # use something like this for input handling later
+      # for e in pygame.event.get():
+      #    if e.type == QUIT: raise SystemExit, "QUIT"
+      #    if e.type == KEYDOWN and e.key == K_ESCAPE:
+      #       raise SystemExit, "ESCAPE"
+
+      # pressed = pygame.key.get_pressed()
+      # up, left, right = [pressed[key] for key in (K_UP, K_LEFT, K_RIGHT)]
 
    def updateColor(self,gameBgColor):
       # update the player color with the inverted current background color

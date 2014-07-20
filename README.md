@@ -1,13 +1,15 @@
-avoidr 0.12
+avoidr 0.14
 ======
 
 AVOIDR is a collision avoidance game written in python with pygame.
 
 Authors: Connor McEntire & Joshua Peterson
 
-The latest build for Windows has been uploaded (avoidr.v0.12.zip). It has only been tested on a few other machines. 
+The latest build for Windows is avoidr.v0.12.zip:
 
 [Download for Windows Here](https://bitbucket.org/jcpeterson/avoidr/downloads)
+
+GameJolt Page: http://gamejolt.com/games/other/avoidr/30244/
 
 #Game Instructions
 
@@ -19,12 +21,19 @@ Arrow Keys: move the player around
 Space: jump
 
 #Todo:
-(0) fix up the collision detection after jumping
-(1) create player destruction animation with sound
-(2) add settings page and config file 
-(3) create a level system
-(4) add power ups
-(5) add more fitting music
+0. add random size fluctuations to obstacles
+1. rework control flow
+ 1. add game class
+ 2. add scene class
+ 3. add level class
+2. fix up rect attributes for player/object classes 
+3. fix up the collision detection after jumping
+4. create player destruction animation with sound
+5. add game notification labels with computer voice
+6. add settings page and config file 
+7. create a level system
+8. add power ups
+9. add more fitting music
 ...
 
 #Dependencies Needed

@@ -1,7 +1,15 @@
-# AVOIDR v0.13
+# AVOIDR v0.14
 
-# import libraries
 import pygame
+
+# this module may be removed in the future, so check for it...
+try:
+    import pygame.gfxdraw
+    antialias = True
+except ImportError:
+    print 'this is a different version of pygame. antialiasing is off!'
+    antialias = False
+
 import os, time, math, random
 from random import randint
 
@@ -79,7 +87,7 @@ while restart:
 		player = Player(width,height)
 
 		# the number of obstacles objects to create
-		numObstacles = 30
+		numObstacles = 27
 		# create the obstacle objects
 		obstacle = []
 		for obs in range(numObstacles):
@@ -114,10 +122,10 @@ while restart:
 			# collision detection after jumping is currently hacky. should use a timer later on...
 			if not player.isJumping or (player.size in range(player.sizeMin,player.sizeMin+5)):
 				for obs in obstacle:
-					if player.posX in range(obs.posX - player.size, obs.posX + obs.size + player.size) and \
-					   player.posY in range(obs.posY - player.size, obs.posY + obs.size + player.size):
+					if obs.rect.colliderect(player.rect):
 						# quit the current game
 						gameRunning = False
+
 	        #                                                                                           #
 			#------------------------END: player/obstacle size/position updating------------------------#
 
@@ -132,16 +140,27 @@ while restart:
 			# draw all obstacles
 			for obs in obstacle:
 				obs.updateColor(backgroundColor)
-				pygame.draw.rect(screen, obs.color, (obs.posX, obs.posY, obs.size, obs.size), 0)
+				pygame.draw.rect(screen, obs.color, obs.rect, 0)
 
+			# draw the player shadow if jumping
 			if player.isJumping:
-				pygame.draw.circle(screen, (50,50,50), (player.posX, player.posY+25), player.sizeMax-player.size, 0)				
+				#pygame.draw.circle(screen, (50,50,50), (player.posX, player.posY+25), player.sizeMax-player.size, 0)	
+				pygame.draw.ellipse(screen, (50,50,50), ((player.rect.x,player.rect.y+25),(player.size,player.size)), 0)	
+				if antialias:
+					# this is a horrible way to antialias the player for now; it must be called twice to fill in all the gaps
+					pygame.gfxdraw.aaellipse(screen, player.rect.x+(player.size/2), player.rect.y+(player.size/2)+25, player.rect.width/2 -1, player.rect.height/2 -1, (50,50,50))
+					pygame.gfxdraw.aaellipse(screen, player.rect.x+(player.size/2-1), player.rect.y+(player.size/2-1)+25, player.rect.width/2 -1, player.rect.height/2 -1, (50,50,50))
+	
 
 			# update the player color
 			player.updateColor(backgroundColor)
 
 			# draw the main character
-			pygame.draw.circle(screen, player.color, (player.posX, player.posY), player.size, 0)
+			pygame.draw.ellipse(screen, player.color, player.rect, 0)
+			if antialias:	
+				# this is a horrible way to antialias the player for now; it must be called twice to fill in all the gaps
+				pygame.gfxdraw.aaellipse(screen, player.rect.x+(player.size/2), player.rect.y+(player.size/2), player.rect.width/2 -1, player.rect.height/2 -1, player.color)
+				pygame.gfxdraw.aaellipse(screen, player.rect.x+(player.size/2-1), player.rect.y+(player.size/2-1), player.rect.width/2 -1, player.rect.height/2 -1, player.color)
 
 			# draw the timer on the screen
 			timeString = '%.3g' % ((time.clock() - startTimer))

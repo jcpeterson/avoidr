@@ -1,5 +1,6 @@
 import random
 import math
+import pygame
 
 class Obstacle:
 
@@ -46,12 +47,15 @@ class Obstacle:
       # start out white; it doesn't really matter
       self.color = (255,255,255)
 
+      self.rect = pygame.Rect((self.posX,self.posY),(self.size,self.size))
+
       # one (more) obstacle instance has been made
       Obstacle.count += 1
 
    # update the position of the player
    def updatePos(self):
 
+      # turn the obstacle around when it hits a wall
       if self.posX >= self.posRangeX - self.size or self.posX <= 0:
          self.dirX *= -1
 
@@ -64,19 +68,8 @@ class Obstacle:
       # the objects new position is its current position plus its (direction (-1 or 1) * its speed (number of pixels to move))
       self.posY = self.posY + (self.dirY * self.speedY)
 
+      self.rect.move_ip(self.dirX * self.speedX,self.dirY * self.speedY)
+
    def updateColor(self,gameBgColor):
       # update the player color with a weird color (partly derived from the game background color)
       self.color = (math.fabs(100-gameBgColor[0]),255-gameBgColor[1],gameBgColor[2])
-
-   # THESE SET-GET FUNCTIONS ARE NOT BEING USED YET!!!
-   # def getPosX(self):
-   #   return self.posX
-
-   # def setPosX(self, posX):
-   #   self.posX = posX
-
-   # def getPosY(self):
-   #   return self.posY
-
-   # def setPosY(self):
-   #   self.posY = posY
